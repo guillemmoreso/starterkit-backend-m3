@@ -9,7 +9,6 @@ const clubSchema = new Schema(
     name: { type: String, required: true },
     description: { type: String, required: true },
     city: { type: String, required: true },
-    location: { lat: Number, long: Number, required: true },
     logo: { type: String, required: true },
     clubImages: { type: String },
     price: { type: Number },

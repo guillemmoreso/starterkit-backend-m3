@@ -9,17 +9,23 @@ const MongoStore = require('connect-mongo')(session);
 const cors = require('cors');
 require('dotenv').config();
 
+// API Routes
+const authRouter = require('./routes/auth');
+const clubs = require('./routes/clubs');
+// const bookings = require('./routes/bookings');
+
 mongoose.set('useCreateIndex', true);
 mongoose
-  .connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     console.log('connected to: ', process.env.MONGO_URL);
   })
-  .catch((error) => {
+  .catch(error => {
     console.error(error);
   });
-
-const authRouter = require('./routes/auth');
 
 const app = express();
 
@@ -56,7 +62,10 @@ app.use((req, res, next) => {
   next();
 });
 
+// API Routes
 app.use('/', authRouter);
+app.use('/clubs', clubs);
+// app.use('/bookings', bookings);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
