@@ -5,10 +5,8 @@ const { ObjectId } = Schema.Types;
 
 const courtSchema = new Schema(
   {
+    clubCourt: [{ type: ObjectId, ref: 'Club' }],
     courtName: { type: String },
-    timetableArray: [{ type: String }],
-    day: { type: Date },
-    courtsBooked: [{ type: ObjectId, ref: 'Booking' }],
   },
   {
     timestamps: {
