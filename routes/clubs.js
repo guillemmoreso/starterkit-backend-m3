@@ -18,7 +18,6 @@ router.get('/:clubId', async (req, res, next) => {
   const { clubId } = req.params;
   try {
     const club = await Club.findById(clubId);
-    console.log('Elloclubs', club.courts);
     if (club) {
       res.json(club);
     } else {
