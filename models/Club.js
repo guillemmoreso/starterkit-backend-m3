@@ -9,12 +9,12 @@ const clubSchema = new Schema(
     name: { type: String, required: true },
     description: { type: String, required: true },
     city: { type: String, required: true },
-    logo: { type: String, required: true },
+    logo: { type: String },
     clubImages: { type: String },
     price: { type: Number },
     rating: { type: Number },
     comments: { type: String },
-    numberOfCourts: { type: Number, required: true },
+    numberOfCourts: { type: Number },
   },
   {
     timestamps: {
