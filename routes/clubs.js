@@ -1,24 +1,28 @@
 const express = require('express');
 const router = express.Router();
-
 const Club = require('../models/Club');
 
 const { checkIfLoggedIn } = require('../middlewares/index');
 
-router.get('/', async (req, res, next) => {
+/* GET clubs listing. */
+router.get('/', checkIfLoggedIn, async (req, res, next) => {
   try {
-    const listOfClubs = await Club.find();
-    res.status(200).json({ listOfClubs });
+    const clubs = await Club.find();
+    res.json(clubs);
   } catch (error) {
     next(error);
   }
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:clubId', checkIfLoggedIn, async (req, res, next) => {
+  const { clubId } = req.params;
   try {
-    const clubId = req.params.id;
-    const response = await Club.findById(clubId);
-    res.status(200).json(response);
+    const club = await Club.findById(clubId);
+    if (club) {
+      res.json(club);
+    } else {
+      res.json({});
+    }
   } catch (error) {
     next(error);
   }
