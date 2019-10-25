@@ -21,9 +21,10 @@ router.post(
   '/signup',
   checkUsernameAndPasswordNotEmpty,
   async (req, res, next) => {
-    const { name, surname, email, password } = res.locals.auth;
+    const { name, surname, username, password } = res.locals.auth;
     try {
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ username });
+      console.log('Uuuuser is:', res.locals.auth);
       if (user) {
         return res.status(422).json({ code: 'username-not-unique' });
       }
@@ -32,12 +33,14 @@ router.post(
       const hashedPassword = bcrypt.hashSync(password, salt);
 
       const newUser = await User.create({
+        username,
+        hashedPassword,
         name,
         surname,
-        email,
-        hashedPassword,
       });
       req.session.currentUser = newUser;
+      console.log('Neeewuser is:', newUser);
+
       return res.json(newUser);
     } catch (error) {
       next(error);
@@ -49,9 +52,9 @@ router.post(
   '/login',
   checkUsernameAndPasswordNotEmpty,
   async (req, res, next) => {
-    const { email, password } = res.locals.auth;
+    const { username, password } = res.locals.auth;
     try {
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ username });
       if (!user) {
         return res.status(404).json({ code: 'not-found' });
       }

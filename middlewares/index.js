@@ -8,9 +8,8 @@ const checkIfLoggedIn = (req, res, next) => {
 };
 
 const checkUsernameAndPasswordNotEmpty = (req, res, next) => {
-  const { email, password } = req.body;
-
-  if (email !== '' && password !== '') {
+  const { username, password, name, surname } = req.body;
+  if (username !== '' && password !== '' && name !== '' && surname != '') {
     res.locals.auth = req.body;
     next();
   } else {
