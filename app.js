@@ -12,6 +12,8 @@ require('dotenv').config();
 // API Routes
 const authRouter = require('./routes/auth');
 const clubs = require('./routes/clubs');
+const search = require('./routes/search');
+
 // const bookings = require('./routes/bookings');
 
 mongoose.set('useCreateIndex', true);
@@ -65,6 +67,8 @@ app.use((req, res, next) => {
 // API Routes
 app.use('/', authRouter);
 app.use('/clubs', clubs);
+app.use('/search', search);
+
 // app.use('/bookings', bookings);
 
 // catch 404 and forward to error handler
