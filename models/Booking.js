@@ -9,7 +9,7 @@ const bookingSchema = new Schema(
     club: { type: ObjectId, ref: 'Club' },
     court: { type: ObjectId, ref: 'Court' },
     day: { type: Date },
-    startingHour: { type: String },
+    startingHour: { type: Number },
     gameResult: { type: String },
   },
   {
