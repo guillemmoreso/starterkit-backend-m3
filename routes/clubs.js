@@ -8,7 +8,7 @@ const Court = require('../models/Court');
 /* GET clubs listing. */
 router.get('/', async (req, res, next) => {
   try {
-    const clubs = await Club.find().populate('courts');
+    const clubs = await Club.find();
     console.log('CLUBS: ', clubs);
     res.json(clubs);
   } catch (error) {
