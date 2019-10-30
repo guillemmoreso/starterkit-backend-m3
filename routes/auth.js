@@ -21,6 +21,7 @@ router.post(
   '/signup',
   checkUsernameAndPasswordNotEmpty,
   async (req, res, next) => {
+    console.log('post: ', res.locals.auth);
     const { name, surname, username, password } = res.locals.auth;
     try {
       const user = await User.findOne({ username });

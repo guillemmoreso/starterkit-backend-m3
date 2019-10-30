@@ -24,4 +24,17 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+router.post('/', async (req, res, next) => {
+  const { startingHour } = req.body;
+  try {
+    const clubs = await Club.find({
+      openingHours: { $eq: startingHour },
+    });
+
+    return res.json(clubs);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
