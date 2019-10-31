@@ -9,20 +9,35 @@ const { checkIfLoggedIn } = require('../middlewares/index');
 
 router.post('/', async (req, res, next) => {
   const { date, searchStartingHour } = req.body;
-  try {
-    const clubsStartingHour = await Club.find({
-      openingHours: { $eq: searchStartingHour },
-    });
-    // console.log('date', date);
 
-    const searchMatchInBooking = await Booking.find({
-      // startingHour: { $eq: searchStartingHour },
+  try {
+    // const clubsStartingHourIsSet = await Club.find({
+    //   openingHours: { $eq: searchStartingHour },
+    // });
+
+    const searchDatePickerMatchInBooking = await Booking.find({
+      startingHour: { $eq: searchStartingHour },
       day: { $eq: date },
     }).populate('club');
 
-    console.log('searchMatchInBooking', searchMatchInBooking);
+    console.log(
+      'searchDatePickerMatchInBooking',
+      searchDatePickerMatchInBooking,
+    );
+    const unavailableClubs = searchDatePickerMatchInBooking.map(booking => {
+      return booking.club._id;
+    });
+    console.log('unavailableClubs', unavailableClubs);
 
-    return res.json(clubsStartingHour);
+    let arrOfAvailableClubs = [];
+    if (unavailableClubs.length > 0) {
+      arrOfAvailableClubs = await Club.find({
+        _id: { $ne: unavailableClubs },
+        openingHours: { $eq: searchStartingHour },
+      });
+    }
+
+    return res.json(arrOfAvailableClubs);
   } catch (error) {
     next(error);
   }
