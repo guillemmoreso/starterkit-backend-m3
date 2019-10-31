@@ -11,26 +11,26 @@ router.post('/', async (req, res, next) => {
   const { date, searchStartingHour } = req.body;
 
   try {
-    // const clubsStartingHourIsSet = await Club.find({
-    //   openingHours: { $eq: searchStartingHour },
-    // });
+    const clubsStartingHourIsSet = await Club.find({
+      openingHours: { $eq: searchStartingHour },
+    });
 
     const searchDatePickerMatchInBooking = await Booking.find({
       startingHour: { $eq: searchStartingHour },
       day: { $eq: date },
     }).populate('club');
 
-    console.log(
-      'searchDatePickerMatchInBooking',
-      searchDatePickerMatchInBooking,
-    );
     const unavailableClubs = searchDatePickerMatchInBooking.map(booking => {
       return booking.club._id;
     });
-    console.log('unavailableClubs', unavailableClubs);
 
-    let arrOfAvailableClubs = [];
-    if (unavailableClubs.length > 0) {
+    if (unavailableClubs.length === clubsStartingHourIsSet.length) {
+      arrOfAvailableClubs = [];
+    } else if (searchDatePickerMatchInBooking.length === 0) {
+      arrOfAvailableClubs = await Club.find({
+        openingHours: { $eq: searchStartingHour },
+      });
+    } else {
       arrOfAvailableClubs = await Club.find({
         _id: { $ne: unavailableClubs },
         openingHours: { $eq: searchStartingHour },
