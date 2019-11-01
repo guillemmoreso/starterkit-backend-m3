@@ -1,7 +1,10 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 
-const { checkUsernameAndPasswordNotEmpty } = require('../middlewares');
+const {
+  checkUsernameAndPasswordNotEmpty,
+  checkIfLoggedIn,
+} = require('../middlewares');
 
 const User = require('../models/User');
 
@@ -78,5 +81,22 @@ router.get('/logout', (req, res, next) => {
     return res.status(204).send();
   });
 });
+
+// router.post('/delete', checkIfLoggedIn, async (req, res, next) => {
+//   const { username, password } = res.locals.auth;
+//   try {
+//     const user = await User.findOne({ username });
+//     if (!user) {
+//       return res.status(404).json({ code: 'not-found' });
+//     }
+//     if (bcrypt.compareSync(password, user.hashedPassword)) {
+//       req.session.currentUser = user;
+//       return res.json(user);
+//     }
+//     return res.status(404).json({ code: 'not-found' });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 module.exports = router;
