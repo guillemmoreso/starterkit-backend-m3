@@ -74,29 +74,12 @@ router.post(
 );
 
 router.get('/logout', (req, res, next) => {
-  req.session.destroy(err => {
+  req.session.destroy((err) => {
     if (err) {
       next(err);
     }
     return res.status(204).send();
   });
 });
-
-// router.post('/delete', checkIfLoggedIn, async (req, res, next) => {
-//   const { username, password } = res.locals.auth;
-//   try {
-//     const user = await User.findOne({ username });
-//     if (!user) {
-//       return res.status(404).json({ code: 'not-found' });
-//     }
-//     if (bcrypt.compareSync(password, user.hashedPassword)) {
-//       req.session.currentUser = user;
-//       return res.json(user);
-//     }
-//     return res.status(404).json({ code: 'not-found' });
-//   } catch (error) {
-//     next(error);
-//   }
-// });
 
 module.exports = router;

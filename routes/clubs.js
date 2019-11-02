@@ -3,7 +3,7 @@ const router = express.Router();
 const Club = require('../models/Club');
 const Court = require('../models/Court');
 
-// const { checkIfLoggedIn } = require('../middlewares/index'); Pendent solucionar el signup per posarho en les routes
+const { checkIfLoggedIn } = require('../middlewares/index');
 
 /* GET clubs listing. */
 router.get('/', async (req, res, next) => {
