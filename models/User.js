@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
+const { ObjectId } = Schema.Types;
 
 const userSchema = new Schema(
   {
     username: { type: String, required: true, unique: true },
     name: { type: String },
     surname: { type: String },
-    // email: { type: String, unique: true },
-    // password: { type: String },
     hashedPassword: { type: String },
     img: { type: String },
+    clubs: [{ type: ObjectId, ref: 'Club' }],
   },
   {
     timestamps: {

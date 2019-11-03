@@ -33,7 +33,7 @@ router.post(
   },
 );
 
-router.get('/edit-profile/delete', async (req, res, next) => {});
+// router.get('/edit-profile/delete', async (req, res, next) => {});
 
 router.post('/edit-profile/delete', checkIfLoggedIn, async (req, res, next) => {
   const userID = req.session.currentUser._id;
@@ -51,5 +51,7 @@ router.post('/edit-profile/delete', checkIfLoggedIn, async (req, res, next) => {
     next(error);
   }
 });
+
+
 
 module.exports = router;
