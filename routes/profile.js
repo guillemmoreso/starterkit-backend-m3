@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const Club = require('../models/Club');
+const Booking = require('../models/Booking');
 
 const {
   checkUsernameAndPasswordNotEmpty,
@@ -52,6 +54,27 @@ router.post('/edit-profile/delete', checkIfLoggedIn, async (req, res, next) => {
   }
 });
 
+router.get('/favorites', async (req, res, next) => {
+  try {
+    const userFavoriteClubs = req.session.currentUser.clubs;
+    const clubs = await Club.find({ _id: { $in: userFavoriteClubs } });
+    res.json(clubs);
+  } catch (error) {
+    next(error);
+  }
+});
 
+router.get('/results', async (req, res, next) => {
+  try {
+    const userID = req.session.currentUser._id;
+    const userBookings = await Booking.find({ user: { $eq: userID } }).populate(
+      'court user club',
+    );
+    console.log('userBookings', userBookings);
+    res.json(userBookings);
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;
