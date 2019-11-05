@@ -65,11 +65,14 @@ router.get('/favorites', async (req, res, next) => {
 });
 
 router.get('/results', async (req, res, next) => {
+  const userID = req.session.currentUser._id;
   try {
-    const userID = req.session.currentUser._id;
-    const userBookings = await Booking.find({ user: { $eq: userID } }).populate(
-      'court user club',
-    );
+    const userBookings = await Booking.find({
+      user: { $eq: userID },
+      day: { $lt: Date() },
+    })
+      .sort({ day: -1 })
+      .populate('court user club');
     console.log('userBookings', userBookings);
     res.json(userBookings);
   } catch (error) {
