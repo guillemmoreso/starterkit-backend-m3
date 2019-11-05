@@ -15,6 +15,7 @@ const clubs = require('./routes/clubs');
 const bookings = require('./routes/bookings');
 const search = require('./routes/search');
 const profile = require('./routes/profile');
+const reservation = require('./routes/reservation');
 
 mongoose.set('useCreateIndex', true);
 mongoose
@@ -70,6 +71,7 @@ app.use('/clubs', clubs);
 app.use('/bookings', bookings);
 app.use('/search', search);
 app.use('/profile', profile);
+app.use('/reservation', reservation);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
