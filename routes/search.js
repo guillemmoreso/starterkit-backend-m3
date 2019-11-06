@@ -5,8 +5,20 @@ const Booking = require('../models/Booking');
 
 const { checkIfLoggedIn } = require('../middlewares/index');
 
-/* GET filtered clubs listing. */
+/* GET all clubs that have availability at the current hour range */
+// MISSING IF ALREADY BOOKED!!
+router.get('/', async (req, res, next) => {
+  try {
+    const clubs = await Club.find({
+      openingHours: { $gt: new Date().getHours() },
+    });
+    res.json(clubs);
+  } catch (error) {
+    next(error);
+  }
+});
 
+/* POST receive search from user and return the clubs with availability  */
 router.post('/', async (req, res, next) => {
   const { date, searchStartingHour } = req.body;
 
@@ -38,40 +50,6 @@ router.post('/', async (req, res, next) => {
     }
 
     return res.json(arrOfAvailableClubs);
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.get('/', async (req, res, next) => {
-  const { date, startingHour } = req.body;
-  try {
-    const clubs = await Club.find({
-      openingHours: { $gt: new Date().getHours() },
-    }).populate('courts');
-    if (clubs.length === 0) {
-      res.json(clubs);
-    } else {
-      //   console.log('CLUBFILTER', clubs);
-      res.json(clubs);
-    }
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.get('/', async (req, res, next) => {
-  const { date, startingHour } = req.body;
-  try {
-    const clubs = await Club.find({
-      openingHours: { $gt: new Date().getHours() },
-    }).populate('courts');
-    if (clubs.length === 0) {
-      res.json(clubs);
-    } else {
-      //   console.log('CLUBFILTER', clubs);
-      res.json(clubs);
-    }
   } catch (error) {
     next(error);
   }

@@ -24,11 +24,9 @@ router.post(
   '/signup',
   checkUsernameAndPasswordNotEmpty,
   async (req, res, next) => {
-    console.log('post: ', res.locals.auth);
     const { name, surname, username, password } = res.locals.auth;
     try {
       const user = await User.findOne({ username });
-      console.log('Uuuuser is:', res.locals.auth);
       if (user) {
         return res.status(422).json({ code: 'username-not-unique' });
       }
@@ -43,8 +41,6 @@ router.post(
         surname,
       });
       req.session.currentUser = newUser;
-      console.log('Neeewuser is:', newUser);
-
       return res.json(newUser);
     } catch (error) {
       next(error);
@@ -74,7 +70,7 @@ router.post(
 );
 
 router.get('/logout', (req, res, next) => {
-  req.session.destroy((err) => {
+  req.session.destroy(err => {
     if (err) {
       next(err);
     }

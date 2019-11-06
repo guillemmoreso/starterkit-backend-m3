@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 const checkIfLoggedIn = (req, res, next) => {
   if (req.session.currentUser) {
     next();
