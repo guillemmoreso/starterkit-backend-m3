@@ -60,4 +60,21 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+router.get('/', async (req, res, next) => {
+  const { date, startingHour } = req.body;
+  try {
+    const clubs = await Club.find({
+      openingHours: { $gt: new Date().getHours() },
+    }).populate('courts');
+    if (clubs.length === 0) {
+      res.json(clubs);
+    } else {
+      //   console.log('CLUBFILTER', clubs);
+      res.json(clubs);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
