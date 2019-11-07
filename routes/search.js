@@ -21,7 +21,7 @@ router.get('/', async (req, res, next) => {
 /* POST receive search from user and return the clubs with availability  */
 router.post('/', async (req, res, next) => {
   const { date, searchStartingHour } = req.body;
-
+  console.log('body: ', req.body);
   try {
     const clubsStartingHourIsSet = await Club.find({
       openingHours: { $eq: searchStartingHour },
