@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const Club = require('../models/Club');
+const Booking = require('../models/Booking');
 const User = require('../models/User');
 
 const { checkIfLoggedIn } = require('../middlewares/index');
@@ -25,6 +26,26 @@ router.get('/:clubId', async (req, res, next) => {
     } else {
       res.json({});
     }
+  } catch (error) {
+    next(error);
+  }
+});
+
+/* POST receive search from user and return the clubs with availability  */
+router.post('/:clubId', async (req, res, next) => {
+  const { clubId } = req.params;
+  const { date, searchStartingHour } = req.body;
+
+  const submitedHour = searchStartingHour;
+  const submitedDate = date;
+  try {
+    const searchDatePickerMatchInBooking = await Booking.find({
+      startingHour: { $eq: submitedHour },
+      day: { $eq: submitedDate },
+      club: { $eq: clubId },
+    });
+
+    return res.json(searchDatePickerMatchInBooking);
   } catch (error) {
     next(error);
   }
