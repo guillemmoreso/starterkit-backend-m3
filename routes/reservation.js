@@ -11,7 +11,7 @@ router.get('/:clubId', async (req, res, next) => {
   const { clubId } = req.params;
 
   try {
-    const club = await Club.findById(clubId).populate('court');
+    const club = await Club.findById(clubId).populate('courts');
     if (club) {
       res.json(club);
     } else {
