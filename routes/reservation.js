@@ -1,45 +1,43 @@
-// const express = require('express');
-// const router = express.Router();
-// const Club = require('../models/Club');
-// const Court = require('../models/Court');
-// const User = require('../models/User');
+const express = require('express');
+const router = express.Router();
+const Club = require('../models/Club');
+const Court = require('../models/Court');
+const User = require('../models/User');
+const Booking = require('../models/Booking');
 
-// const { checkIfLoggedIn } = require('../middlewares/index');
+const { checkIfLoggedIn } = require('../middlewares/index');
 
-// router.get('/:clubId', async (req, res, next) => {
-//   const { clubId } = req.params;
+router.get('/:clubId', async (req, res, next) => {
+  const { clubId } = req.params;
 
-//   try {
-//     const club = await Club.findById(clubId).populate('courts');
-//     if (club) {
-//       res.json(club);
-//     } else {
-//       res.json({});
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// });
+  try {
+    const club = await Club.findById(clubId).populate('court');
+    if (club) {
+      res.json(club);
+    } else {
+      res.json({});
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
-// router.post('/:clubId', async (req, res, next) => {
-//   const { clubId } = req.params;
-//   const userID = req.session.currentUser._id;
+router.post('/:clubId', async (req, res, next) => {
+  const { searchStartingHour, date, clubId, userId, courtId } = req.body;
 
-//   try {
-//     // const courtID = await Club.find({ _id: clubId }, { courts: 1, _id: 0 });
-//     // console.log('COURTID', courtID);
+  try {
+    const newBooking = await Booking.create({
+      user: userId,
+      club: clubId,
+      court: courtId,
+      day: date,
+      startingHour: searchStartingHour,
+    });
+    console.log('newBooking', newBooking);
+    res.json(newBooking);
+  } catch (error) {
+    next(error);
+  }
+});
 
-//     const newBooking = await Booking.create({
-//       user: userID,
-//       club: clubId,
-//       // court: courtID,
-//       // day: stateDay,
-//       // startingHour: stateStartingHour,
-//     });
-//     res.json(newBooking);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
-// module.exports = router;
+module.exports = router;

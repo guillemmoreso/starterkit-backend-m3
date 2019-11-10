@@ -20,7 +20,7 @@ router.get('/', async (req, res, next) => {
 router.get('/:clubId', async (req, res, next) => {
   const { clubId } = req.params;
   try {
-    const club = await Club.findById(clubId).populate('courts');
+    const club = await Club.findById(clubId);
     if (club) {
       res.json(club);
     } else {
@@ -44,7 +44,10 @@ router.post('/:clubId', async (req, res, next) => {
       day: { $eq: submitedDate },
       club: { $eq: clubId },
     });
-
+    console.log(
+      'searchDatePickerMatchInBooking',
+      searchDatePickerMatchInBooking,
+    );
     return res.json(searchDatePickerMatchInBooking);
   } catch (error) {
     next(error);
