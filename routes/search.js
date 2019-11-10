@@ -21,20 +21,22 @@ router.get('/', async (req, res, next) => {
 /* POST receive search from user and return the clubs with availability  */
 router.post('/', async (req, res, next) => {
   const { date, searchStartingHour } = req.body;
-
-  console.log('body: ', req.body);
-  console.log('date: ', req.body.query.date);
-  console.log('searchStartingHour: ', req.body.query.searchStartingHour);
+  const submitedHour = searchStartingHour;
+  const submitedDate = date;
 
   try {
+    console.log('phase 1:', submitedHour);
     const clubsStartingHourIsSet = await Club.find({
-      openingHours: { $eq: req.body.query.searchStartingHour },
+      openingHours: { $eq: submitedHour },
     });
+    console.log('phase 2:clubsStartingHourIsSet', clubsStartingHourIsSet);
 
     const searchDatePickerMatchInBooking = await Booking.find({
-      startingHour: { $eq: req.body.query.searchStartingHour },
-      day: { $eq: req.body.query.date },
+      startingHour: { $eq: submitedHour },
+      day: { $eq: submitedDate },
     }).populate('club');
+
+    console.log('phase 3:searchDatePickerMatchInBooking', searchDatePickerMatchInBooking);
 
     const unavailableClubs = searchDatePickerMatchInBooking.map(booking => {
       return booking.club._id;
@@ -44,12 +46,12 @@ router.post('/', async (req, res, next) => {
       arrOfAvailableClubs = [];
     } else if (searchDatePickerMatchInBooking.length === 0) {
       arrOfAvailableClubs = await Club.find({
-        openingHours: { $eq: req.body.query.searchStartingHour },
+        openingHours: { $eq: submitedHour },
       });
     } else {
       arrOfAvailableClubs = await Club.find({
         _id: { $ne: unavailableClubs },
-        openingHours: { $eq: req.body.query.searchStartingHour },
+        openingHours: { $eq: submitedHour },
       });
     }
 
