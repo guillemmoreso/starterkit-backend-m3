@@ -1,4 +1,5 @@
 const express = require('express');
+const uploader = require('../configs/cloudinary-setup');
 
 const router = express.Router();
 const User = require('../models/User');
@@ -81,4 +82,19 @@ router.get('/results', async (req, res, next) => {
   }
 });
 
+router.post(
+  '/edit-profile/upload',
+  uploader.single('avatarImg'),
+  (req, res, next) => {
+    const { formData } = req.body;
+
+    if (!req.file) {
+      next(new Error('No file uploaded!'));
+      return;
+    }
+    // get secure_url from the file object and save it in the
+    // variable 'secure_url', but this can be any name, just make sure you remember to use the same in frontend
+    res.json({ secure_url: req.file.secure_url });
+  },
+);
 module.exports = router;

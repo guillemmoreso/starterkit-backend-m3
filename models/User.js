@@ -9,7 +9,7 @@ const userSchema = new Schema(
     name: { type: String },
     surname: { type: String },
     hashedPassword: { type: String },
-    img: { type: String },
+    avatarImg: { type: String },
     clubs: [{ type: ObjectId, ref: 'Club' }],
   },
   {
