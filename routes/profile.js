@@ -87,22 +87,6 @@ router.get("/results", async (req, res, next) => {
   }
 });
 
-router.post(
-  "/edit-profile/upload",
-  uploader.single("avatarImg"),
-  (req, res, next) => {
-    const { formData } = req.body;
-
-    if (!req.file) {
-      next(new Error("No file uploaded!"));
-      return;
-    }
-    // get secure_url from the file object and save it in the
-    // variable 'secure_url', but this can be any name, just make sure you remember to use the same in frontend
-    res.json({ secure_url: req.file.secure_url });
-  }
-);
-
 router.get("/friends", async (req, res, next) => {
   const userID = req.session.currentUser._id;
   try {
@@ -155,4 +139,22 @@ router.put("/results/:bookingId", async (req, res, next) => {
   }
 });
 
+// POST submits profile edit form
+router.post("/edit-profile/upload", async (req, res, next) => {
+  const userID = req.session.currentUser._id;
+  try {
+    const upload = await User.findByIdAndUpdate(
+      userID,
+      {
+        avatarImg
+      },
+      { new: true }
+    );
+    req.session.currentUser = upload;
+
+    return res.json(upload);
+  } catch (error) {
+    next(error);
+  }
+});
 module.exports = router;
