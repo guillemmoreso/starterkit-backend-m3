@@ -40,15 +40,15 @@ router.put("/:playerId/petition", async (req, res, next) => {
     const currentPetitions = req.session.currentUser.petitions;
     console.log("petions", req.session.currentUser);
     let updatedUser = null;
-    // if (currentPetitions.includes(playerId)) {
-    //   updatedUser = null;
-    // } else {
-    //   updatedUser = await User.findByIdAndUpdate(
-    //     playerId,
-    //     { $push: { petitions: userId } },
-    //     { new: true }
-    //   );
-    // }
+    if (currentPetitions.includes(playerId)) {
+      updatedUser = null;
+    } else {
+      updatedUser = await User.findByIdAndUpdate(
+        playerId,
+        { $push: { petitions: userId } },
+        { new: true }
+      );
+    }
     req.session.currentUser = updatedUser;
     res.status(200).json({ updatedUser });
   } catch (error) {
