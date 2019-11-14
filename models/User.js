@@ -11,7 +11,8 @@ const userSchema = new Schema(
     hashedPassword: { type: String },
     avatarImg: { type: String },
     clubs: [{ type: ObjectId, ref: "Club" }],
-    friends: [{ type: ObjectId, ref: "User" }]
+    friends: [{ type: ObjectId, ref: "User" }],
+    petitions: [{ type: ObjectId, ref: "User" }]
   },
   {
     timestamps: {
