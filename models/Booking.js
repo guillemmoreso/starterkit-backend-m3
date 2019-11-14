@@ -11,7 +11,7 @@ const bookingSchema = new Schema(
     day: { type: Date },
     startingHour: { type: Number },
     gameResult: { type: String },
-    gameWon: { type: Boolean },
+    gameWon: { type: Boolean, default: false },
     opponents: [{ type: ObjectId, ref: "User" }],
     bookingPartner: { type: ObjectId, ref: "User" }
   },

@@ -135,4 +135,24 @@ router.get("/user/:userId", async (req, res, next) => {
   }
 });
 
+/* PUT update game result */
+router.put("/results/:bookingId", async (req, res, next) => {
+  const { bookingId } = req.params;
+  const { gameWon } = req.body;
+
+  try {
+    const bookingGameWonUpdate = await Booking.findByIdAndUpdate(
+      bookingId,
+      {
+        gameWon
+      },
+      { new: true }
+    );
+    console.log("bookingGameWonUpdate");
+    return res.json(bookingGameWonUpdate);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
