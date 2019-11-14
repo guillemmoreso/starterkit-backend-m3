@@ -9,7 +9,11 @@ const userSchema = new Schema(
     name: { type: String },
     surname: { type: String },
     hashedPassword: { type: String },
-    avatarImg: { type: String },
+    avatarImg: {
+      type: String,
+      default:
+        "https://res.cloudinary.com/dalhi9ynf/image/upload/v1573759850/profile_cj4jfx.svg"
+    },
     clubs: [{ type: ObjectId, ref: "Club" }],
     friends: [{ type: ObjectId, ref: "User" }],
     petitions: [{ type: ObjectId, ref: "User" }]
