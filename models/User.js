@@ -12,8 +12,10 @@ const userSchema = new Schema(
     avatarImg: {
       type: String,
       default:
-        "https://res.cloudinary.com/dalhi9ynf/image/upload/v1573759850/profile_cj4jfx.svg"
+        "https://res.cloudinary.com/dalhi9ynf/image/upload/v1573834625/laptop_1_sqha5p.png"
     },
+    description: { type: String, default: "No Description yet" },
+    level: { type: String, default: "Undefined" },
     clubs: [{ type: ObjectId, ref: "Club" }],
     friends: [{ type: ObjectId, ref: "User" }],
     petitions: [{ type: ObjectId, ref: "User" }]
