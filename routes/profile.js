@@ -132,7 +132,6 @@ router.put("/results/:bookingId", async (req, res, next) => {
       },
       { new: true }
     );
-    console.log("bookingGameWonUpdate");
     return res.json(bookingGameWonUpdate);
   } catch (error) {
     next(error);
@@ -140,17 +139,17 @@ router.put("/results/:bookingId", async (req, res, next) => {
 });
 
 // POST submits profile edit form
-router.post("/edit-profile/upload", async (req, res, next) => {
+router.put("/edit-profile/upload", async (req, res, next) => {
   const userID = req.session.currentUser._id;
+  const { avatarImgUpload } = req.body;
   try {
     const upload = await User.findByIdAndUpdate(
       userID,
       {
-        avatarImg
+        avatarImg: avatarImgUpload
       },
       { new: true }
     );
-    req.session.currentUser = upload;
 
     return res.json(upload);
   } catch (error) {
