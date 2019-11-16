@@ -139,15 +139,15 @@ router.put("/edit-profile/upload", async (req, res, next) => {
   const userID = req.session.currentUser._id;
   const { avatarImgUpload } = req.body;
   try {
-    const upload = await User.findByIdAndUpdate(
+    const userModifiedData = await User.findByIdAndUpdate(
       userID,
       {
         avatarImg: avatarImgUpload
       },
       { new: true }
     );
-
-    return res.json(upload);
+    req.session.currentUser = userModifiedData;
+    return res.json(userModifiedData);
   } catch (error) {
     next(error);
   }
