@@ -7,7 +7,20 @@ const User = require("../models/User");
 
 const { checkIfLoggedIn } = require("../middlewares/index");
 
-router.put("/", async (req, res, next) => {
+router.get("/:playerId", async (req, res, next) => {
+  const { playerId } = req.params;
+  try {
+    const player = await User.findById(playerId);
+    const games = await Booking.find({
+      user: { $eq: playerId }
+    });
+    res.json({ player, games });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put("/:playerId", async (req, res, next) => {
   const userId = req.session.currentUser._id;
   const { level } = req.body;
 
@@ -21,19 +34,6 @@ router.put("/", async (req, res, next) => {
     );
     req.session.currentUser = userModifiedData;
     return res.json(userModifiedData);
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.get("/:playerId", async (req, res, next) => {
-  const { playerId } = req.params;
-  try {
-    const player = await User.findById(playerId);
-    const games = await Booking.find({
-      user: { $eq: playerId }
-    });
-    res.json({ player, games });
   } catch (error) {
     next(error);
   }
