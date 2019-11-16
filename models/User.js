@@ -14,7 +14,6 @@ const userSchema = new Schema(
       default:
         "https://res.cloudinary.com/dalhi9ynf/image/upload/v1573857720/mclovin_kprr0f.jpg"
     },
-    description: { type: String, default: "No Description yet" },
     level: { type: String, default: "Undefined" },
     clubs: [{ type: ObjectId, ref: "Club" }],
     friends: [{ type: ObjectId, ref: "User" }],

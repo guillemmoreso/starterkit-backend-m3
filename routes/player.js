@@ -56,6 +56,7 @@ router.put("/:playerId/petition", async (req, res, next) => {
       );
     }
     req.session.currentUser = updatedUser;
+    console.log("updatedUser", updatedUser);
     res.status(200).json({ updatedUser });
   } catch (error) {
     next(error);

@@ -159,7 +159,7 @@ router.get("/friends/petitions", async (req, res, next) => {
     const user = await User.findById(userID);
     const userPetitions = await User.find({
       _id: { $in: user.petitions }
-    });
+    }).populate("user");
     console.log("userPetitions", userPetitions);
     return res.json(userPetitions);
   } catch (error) {
