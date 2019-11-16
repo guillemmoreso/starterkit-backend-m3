@@ -118,13 +118,13 @@ router.get("/user/:userId", async (req, res, next) => {
 /* PUT update game result */
 router.put("/results/:bookingId", async (req, res, next) => {
   const { bookingId } = req.params;
-  const { gameWon } = req.body;
+  const { gameResult } = req.body;
 
   try {
     const bookingGameWonUpdate = await Booking.findByIdAndUpdate(
       bookingId,
       {
-        gameWon
+        gameResult
       },
       { new: true }
     );
@@ -148,6 +148,21 @@ router.put("/edit-profile/upload", async (req, res, next) => {
     );
     req.session.currentUser = userModifiedData;
     return res.json(userModifiedData);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GET user petitions
+router.get("/friends/petitions", async (req, res, next) => {
+  const userID = req.session.currentUser._id;
+  try {
+    const user = await User.findById(userID);
+    const userPetitions = await User.find({
+      _id: { $in: user.petitions }
+    });
+    console.log("userPetitions", userPetitions);
+    return res.json(userPetitions);
   } catch (error) {
     next(error);
   }

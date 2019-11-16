@@ -37,7 +37,6 @@ router.put("/:playerId/petition", async (req, res, next) => {
     const { playerId } = req.params;
     const userId = req.session.currentUser._id;
     const currentPetitions = req.session.currentUser.petitions;
-    console.log("petions", req.session.currentUser);
     let updatedUser = null;
     if (currentPetitions.includes(playerId)) {
       updatedUser = null;
@@ -49,6 +48,7 @@ router.put("/:playerId/petition", async (req, res, next) => {
       );
     }
     req.session.currentUser = updatedUser;
+    console.log("updatedUser", updatedUser);
     res.status(200).json({ updatedUser });
   } catch (error) {
     next(error);
