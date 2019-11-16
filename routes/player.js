@@ -7,12 +7,20 @@ const User = require("../models/User");
 
 const { checkIfLoggedIn } = require("../middlewares/index");
 
-/* GET all clubs listing. */
-router.get("/", async (req, res, next) => {
+router.put("/", async (req, res, next) => {
   const userId = req.session.currentUser._id;
+  const { level } = req.body;
+
   try {
-    const user = await User.findById(userId);
-    res.json(user);
+    const userModifiedData = await User.findByIdAndUpdate(
+      userId,
+      {
+        level
+      },
+      { new: true }
+    );
+    req.session.currentUser = userModifiedData;
+    return res.json(userModifiedData);
   } catch (error) {
     next(error);
   }
@@ -48,7 +56,6 @@ router.put("/:playerId/petition", async (req, res, next) => {
       );
     }
     req.session.currentUser = updatedUser;
-    console.log("updatedUser", updatedUser);
     res.status(200).json({ updatedUser });
   } catch (error) {
     next(error);
