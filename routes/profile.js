@@ -6,20 +6,17 @@ const User = require("../models/User");
 const Club = require("../models/Club");
 const Booking = require("../models/Booking");
 
-const {
-  checkUsernameAndPasswordNotEmpty,
-  checkIfLoggedIn
-} = require("../middlewares");
+const { checkIfLoggedIn, checkUsernameNotEmpty } = require("../middlewares");
 
-// POST submits profile edit form
-router.post(
+// PUT edits profile edit form
+router.put(
   "/edit-profile",
-  checkUsernameAndPasswordNotEmpty,
+  checkUsernameNotEmpty,
   checkIfLoggedIn,
 
   async (req, res, next) => {
-    console.log("post: ", res.locals.auth);
-    const { name, surname, username, password } = res.locals.auth;
+    console.log("reslocals", res.locals.auth);
+    const { name, surname, username } = res.locals.auth;
     const userID = req.session.currentUser._id;
 
     try {
@@ -27,7 +24,6 @@ router.post(
         userID,
         {
           username,
-          password,
           name,
           surname
         },

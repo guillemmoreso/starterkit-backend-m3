@@ -14,21 +14,14 @@ router.get("/", async (req, res, next) => {
     const clubs = await Club.find({
       openingHours: { $gt: new Date().getHours() }
     });
-    console.log("Phase1:Clubs", clubs);
     const searchDatePickerMatchInBooking = await Booking.find({
       startingHour: { $eq: new Date().getHours() },
       day: { $gte: yesterday, $lte: tomorrow }
     }).populate("club");
-    console.log(
-      "Phase2:searchDatePickerMatchInBooking",
-      searchDatePickerMatchInBooking
-    );
 
     const unavailableClubs = searchDatePickerMatchInBooking.map(booking => {
       return booking.club._id;
     });
-
-    console.log("Phase3:unavailableClubs", unavailableClubs);
 
     if (unavailableClubs.length === clubs.length) {
       arrOfAvailableClubs = [];

@@ -22,11 +22,11 @@ router.get("/:playerId", async (req, res, next) => {
   const { playerId } = req.params;
   try {
     const player = await User.findById(playerId);
-    if (player) {
-      res.json(player);
-    } else {
-      res.json({});
-    }
+    // const gameWons = await Booking.find({
+    //   user: { $eq: playerId }
+    // });
+    // console.log("GAME WONS", gameWons);
+    res.json(player);
   } catch (error) {
     next(error);
   }
