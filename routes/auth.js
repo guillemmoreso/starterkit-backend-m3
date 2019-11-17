@@ -1,34 +1,36 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
+const express = require("express");
+const bcrypt = require("bcrypt");
 
 const {
   checkUsernameAndPasswordNotEmpty,
-  checkIfLoggedIn,
-} = require('../middlewares');
+  checkIfLoggedIn
+} = require("../middlewares");
 
-const User = require('../models/User');
+const User = require("../models/User");
 
 const bcryptSalt = 10;
 
 const router = express.Router();
 
-router.get('/me', (req, res, next) => {
+/* GET current user data */
+router.get("/me", (req, res, next) => {
   if (req.session.currentUser) {
     res.status(200).json(req.session.currentUser);
   } else {
-    res.status(401).json({ code: 'unauthorized' });
+    res.status(401).json({ code: "unauthorized" });
   }
 });
 
+/* POST user signup data */
 router.post(
-  '/signup',
+  "/signup",
   checkUsernameAndPasswordNotEmpty,
   async (req, res, next) => {
     const { name, surname, username, password } = res.locals.auth;
     try {
       const user = await User.findOne({ username });
       if (user) {
-        return res.status(422).json({ code: 'username-not-unique' });
+        return res.status(422).json({ code: "username-not-unique" });
       }
 
       const salt = bcrypt.genSaltSync(bcryptSalt);
@@ -38,38 +40,40 @@ router.post(
         username,
         hashedPassword,
         name,
-        surname,
+        surname
       });
       req.session.currentUser = newUser;
       return res.json(newUser);
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
+/* POST user login data */
 router.post(
-  '/login',
+  "/login",
   checkUsernameAndPasswordNotEmpty,
   async (req, res, next) => {
     const { username, password } = res.locals.auth;
     try {
       const user = await User.findOne({ username });
       if (!user) {
-        return res.status(404).json({ code: 'not-found' });
+        return res.status(404).json({ code: "not-found" });
       }
       if (bcrypt.compareSync(password, user.hashedPassword)) {
         req.session.currentUser = user;
         return res.json(user);
       }
-      return res.status(404).json({ code: 'not-found' });
+      return res.status(404).json({ code: "not-found" });
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
-router.get('/logout', (req, res, next) => {
+/* GET user logout */
+router.get("/logout", (req, res, next) => {
   req.session.destroy(err => {
     if (err) {
       next(err);

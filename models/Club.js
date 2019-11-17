@@ -7,13 +7,10 @@ const clubSchema = new Schema(
   {
     courts: [{ type: ObjectId, ref: 'Court' }],
     name: { type: String },
-    description: { type: String },
     city: { type: String },
     logo: { type: String },
     clubImages: [{ type: String }],
     price: { type: Number },
-    rating: { type: Number },
-    comments: { type: String },
     location: { type: String },
     openingHours: [{ type: Number }],
     geometry: {
@@ -23,7 +20,6 @@ const clubSchema = new Schema(
       },
       coordinates: {
         type: [],
-        // required: true,
       },
     },
   },
