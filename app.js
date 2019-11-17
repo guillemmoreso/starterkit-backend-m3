@@ -61,13 +61,6 @@ app.set("trust proxy", true);
 app.use(cors);
 app.options("*", cors);
 
-// app.use(
-//   cors({
-//     credentials: true,
-//     origin: [process.env.FRONTEND_URL],
-//   }),
-// );
-
 app.use((req, res, next) => {
   app.locals.currentUser = req.session.currentUser;
   next();

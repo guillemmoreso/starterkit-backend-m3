@@ -19,7 +19,7 @@ router.get("/", async (req, res, next) => {
 });
 
 /* GET club details */
-router.get("/:clubId", async (req, res, next) => {
+router.get("/:clubId", checkIfLoggedIn, async (req, res, next) => {
   const { clubId } = req.params;
   try {
     const club = await Club.findById(clubId);
@@ -31,7 +31,7 @@ router.get("/:clubId", async (req, res, next) => {
 });
 
 /* POST receive user search inputs from a club page and return the club availability */
-router.post("/:clubId", async (req, res, next) => {
+router.post("/:clubId", checkIfLoggedIn, async (req, res, next) => {
   const { clubId } = req.params;
   const { date, searchStartingHour } = req.body;
 

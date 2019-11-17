@@ -6,14 +6,15 @@ const Booking = require("../models/Booking");
 const { checkIfLoggedIn } = require("../middlewares/index");
 
 /* GET all clubs that have availability at the current hour range */
-router.get("/", async (req, res, next) => {
-  try {
-    const yesterday = new Date(Date.now() - 864e5);
-    const tomorrow = new Date(Date.now() + 864e5);
+router.get("/", checkIfLoggedIn, async (req, res, next) => {
+  const yesterday = new Date(Date.now() - 864e5);
+  const tomorrow = new Date(Date.now() + 864e5);
 
+  try {
     const clubs = await Club.find({
       openingHours: { $gt: new Date().getHours() }
     });
+
     const searchDatePickerMatchInBooking = await Booking.find({
       startingHour: { $eq: new Date().getHours() },
       day: { $gte: yesterday, $lte: tomorrow }
@@ -41,7 +42,7 @@ router.get("/", async (req, res, next) => {
 });
 
 /* POST receive search from user and return the clubs with availability  */
-router.post("/", async (req, res, next) => {
+router.post("/", checkIfLoggedIn, async (req, res, next) => {
   const { date, searchStartingHour } = req.body;
   const submitedHour = searchStartingHour;
   const submitedDate = date;

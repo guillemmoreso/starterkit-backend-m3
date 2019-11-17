@@ -7,20 +7,23 @@ const User = require("../models/User");
 
 const { checkIfLoggedIn } = require("../middlewares/index");
 
-router.get("/:playerId", async (req, res, next) => {
+/* GET stats from a PadelNow player */
+router.get("/:playerId", checkIfLoggedIn, async (req, res, next) => {
   const { playerId } = req.params;
   try {
     const player = await User.findById(playerId);
     const games = await Booking.find({
       user: { $eq: playerId }
     });
+
     res.json({ player, games });
   } catch (error) {
     next(error);
   }
 });
 
-router.put("/:playerId", async (req, res, next) => {
+/* PUT edit user level */
+router.put("/:playerId", checkIfLoggedIn, async (req, res, next) => {
   const userId = req.session.currentUser._id;
   const { level } = req.body;
 
@@ -32,6 +35,7 @@ router.put("/:playerId", async (req, res, next) => {
       },
       { new: true }
     );
+
     req.session.currentUser = userModifiedData;
     return res.json(userModifiedData);
   } catch (error) {
@@ -39,13 +43,14 @@ router.put("/:playerId", async (req, res, next) => {
   }
 });
 
-/* PUT to manage petitions */
-router.put("/:playerId/petition", async (req, res, next) => {
+/* PUT to manage user petitions */
+router.put("/:playerId/petition", checkIfLoggedIn, async (req, res, next) => {
   try {
     const { playerId } = req.params;
     const userId = req.session.currentUser._id;
     const currentPetitions = req.session.currentUser.petitions;
     let updatedUser = null;
+
     if (currentPetitions.includes(playerId)) {
       updatedUser = null;
     } else {
@@ -55,8 +60,8 @@ router.put("/:playerId/petition", async (req, res, next) => {
         { new: true }
       );
     }
+
     req.session.currentUser = updatedUser;
-    console.log("updatedUser", updatedUser);
     res.status(200).json({ updatedUser });
   } catch (error) {
     next(error);

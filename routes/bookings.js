@@ -8,7 +8,7 @@ const Club = require("../models/Club");
 const { checkIfLoggedIn } = require("../middlewares/index");
 
 /* GET all user upcoming bookings sorted by date */
-router.get("/", async (req, res, next) => {
+router.get("/", checkIfLoggedIn, async (req, res, next) => {
   const userId = req.session.currentUser._id;
   try {
     const bookings = await Booking.find({
@@ -25,7 +25,7 @@ router.get("/", async (req, res, next) => {
 });
 
 /* GET booking details */
-router.get("/:bookingId", async (req, res, next) => {
+router.get("/:bookingId", checkIfLoggedIn, async (req, res, next) => {
   const { bookingId } = req.params;
   try {
     const booking = await Booking.findById(bookingId).populate(
