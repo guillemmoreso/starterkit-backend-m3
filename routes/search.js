@@ -45,6 +45,8 @@ router.post("/", async (req, res, next) => {
   const { date, searchStartingHour } = req.body;
   const submitedHour = searchStartingHour;
   const submitedDate = date;
+  const submitedDateParsed = new Date(submitedDate);
+  const currentTime = new Date(Date.now());
 
   try {
     const clubsStartingHourIsSet = await Club.find({
@@ -60,7 +62,10 @@ router.post("/", async (req, res, next) => {
       return booking.club._id;
     });
 
-    if (unavailableClubs.length === clubsStartingHourIsSet.length) {
+    if (
+      unavailableClubs.length === clubsStartingHourIsSet.length ||
+      submitedDateParsed < currentTime
+    ) {
       arrOfAvailableClubs = [];
     } else if (searchDatePickerMatchInBooking.length === 0) {
       arrOfAvailableClubs = await Club.find({
