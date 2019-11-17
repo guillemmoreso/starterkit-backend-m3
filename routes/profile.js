@@ -160,10 +160,38 @@ router.get("/friends/petitions", async (req, res, next) => {
     const userPetitions = await User.find({
       _id: { $in: user.petitions }
     }).populate("user");
-    console.log("userPetitions", userPetitions);
     return res.json(userPetitions);
   } catch (error) {
     next(error);
   }
 });
+
+router.put(
+  "/friends/petitions/:petitionUserId/accept",
+  async (req, res, next) => {
+    const { petitionUserId } = req.params;
+    const userId = req.session.currentUser._id;
+    try {
+      const user = await User.findByIdAndUpdate(
+        userId,
+        {
+          $pull: { petitions: petitionUserId },
+          $push: { friends: petitionUserId }
+        },
+        { new: true }
+      );
+      const petitioner = await User.findByIdAndUpdate(
+        petitionUserId,
+        {
+          $push: { friends: userId }
+        },
+        { new: true }
+      );
+      req.session.currentUser = user;
+      res.json({ user, petitioner });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 module.exports = router;
