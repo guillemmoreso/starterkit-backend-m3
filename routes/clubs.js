@@ -7,31 +7,30 @@ const User = require("../models/User");
 
 const { checkIfLoggedIn } = require("../middlewares/index");
 
-/* GET all clubs listing. */
+/* GET all clubs registered in PadelNow */
 router.get("/", async (req, res, next) => {
   try {
     const clubs = await Club.find();
+
     res.json(clubs);
   } catch (error) {
     next(error);
   }
 });
 
+/* GET club details */
 router.get("/:clubId", async (req, res, next) => {
   const { clubId } = req.params;
   try {
     const club = await Club.findById(clubId);
-    if (club) {
-      res.json(club);
-    } else {
-      res.json({});
-    }
+
+    res.json(club);
   } catch (error) {
     next(error);
   }
 });
 
-/* POST receive search from user and return the clubs with availability  */
+/* POST receive user search inputs from a club page and return the club availability */
 router.post("/:clubId", async (req, res, next) => {
   const { clubId } = req.params;
   const { date, searchStartingHour } = req.body;
@@ -40,6 +39,7 @@ router.post("/:clubId", async (req, res, next) => {
   const submitedDate = date;
   const submitedDateParsed = new Date(submitedDate);
   const currentTime = new Date(Date.now());
+
   try {
     if (submitedDateParsed < currentTime) {
       searchDatePickerMatchInBooking = "Date Error";
@@ -50,7 +50,7 @@ router.post("/:clubId", async (req, res, next) => {
         club: { $eq: clubId }
       });
     }
-    console.log(searchDatePickerMatchInBooking);
+
     return res.json(searchDatePickerMatchInBooking);
   } catch (error) {
     next(error);
@@ -62,8 +62,10 @@ router.put("/:clubId/switch", async (req, res, next) => {
   try {
     const { clubId } = req.params;
     const userId = req.session.currentUser._id;
+
     const currentClubs = req.session.currentUser.clubs;
     let updatedUser = null;
+
     if (currentClubs.includes(clubId)) {
       updatedUser = await User.findByIdAndUpdate(
         userId,
@@ -77,6 +79,7 @@ router.put("/:clubId/switch", async (req, res, next) => {
         { new: true }
       );
     }
+
     req.session.currentUser = updatedUser;
     res.status(200).json({ updatedUser });
   } catch (error) {
