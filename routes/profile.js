@@ -175,7 +175,7 @@ router.put(
     const userId = req.session.currentUser._id;
 
     try {
-      const user = await User.findByIdAndUpdate(
+      const updatedUser = await User.findByIdAndUpdate(
         userId,
         {
           $pull: { petitions: petitionUserId },
@@ -192,8 +192,33 @@ router.put(
         { new: true }
       );
 
-      req.session.currentUser = user;
-      res.json({ user, petitioner });
+      req.session.currentUser = updatedUser;
+      res.json({ updatedUser, petitioner });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/* PUT deny petitions */
+router.put(
+  "/friends/petitions/:petitionUserId/deny",
+  checkIfLoggedIn,
+  async (req, res, next) => {
+    const { petitionUserId } = req.params;
+    const userId = req.session.currentUser._id;
+
+    try {
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        {
+          $pull: { petitions: petitionUserId }
+        },
+        { new: true }
+      );
+
+      req.session.currentUser = updatedUser;
+      res.json({ updatedUser });
     } catch (error) {
       next(error);
     }
