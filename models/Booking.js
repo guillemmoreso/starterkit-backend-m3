@@ -10,9 +10,7 @@ const bookingSchema = new Schema(
     court: { type: ObjectId, ref: "Court" },
     day: { type: Date },
     startingHour: { type: Number },
-    gameResult: { type: String, default: "TBC" },
-    opponents: [{ type: ObjectId, ref: "User" }],
-    bookingPartner: { type: ObjectId, ref: "User" }
+    gameResult: { type: String, default: "TBC" }
   },
   {
     timestamps: {

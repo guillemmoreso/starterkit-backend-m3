@@ -8,7 +8,6 @@ const clubSchema = new Schema(
     courts: [{ type: ObjectId, ref: 'Court' }],
     name: { type: String },
     city: { type: String },
-    logo: { type: String },
     clubImages: [{ type: String }],
     price: { type: Number },
     location: { type: String },
